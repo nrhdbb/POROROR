@@ -1,0 +1,57 @@
+.yt-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.yt-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.yt-card:hover {
+    border-color: #ff0044;
+    transform: translateY(-2px);
+}
+
+.yt-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
+
+.yt-info {
+    padding: 10px;
+}
+
+.yt-title {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.yt-meta {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.yt-download-btn {
+    width: 100%;
+    background: #ff0044;
+    color: white;
+    border: none;
+    padding: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-top: 5px;
+}
