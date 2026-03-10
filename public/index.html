@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRHD AUDIO BYPAASS</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="yt.css">
+    <script src="https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🎵 NRHD AUDIO <span class="studio">BYPAASS</span></div>
+            <div class="status-pill">⚡ FFmpeg Online</div>
+        </header>
+
+        <div class="main-panel">
+            <!-- YouTube Downloader -->
+            <div class="panel yt-panel" style="border: 1px solid #ff0044; background: #2a1a1a;">
+                <h3 style="color: #ff0044; border-color: #ff0044;">🔴 YOUTUBE DOWNLOADER</h3>
+                <div class="input-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="yt-search-query" placeholder="Search or Paste YouTube Link..." class="input-field">
+                    <button id="btn-yt-search" class="btn-primary" style="background: #ff0044; color: white;">🔍 Search</button>
+                </div>
+                <div id="yt-results" class="yt-results-grid"></div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section" id="upload-area">
+                <input type="file" id="audio-upload" accept="audio/*" hidden>
+                <button class="btn-primary" onclick="document.getElementById('audio-upload').click()">
+                    📁 Upload Audio
+                </button>
+                <span id="file-name">No file selected</span>
+            </div>
+
+            <!-- Waveform & Player -->
+            <div class="player-card">
+                <div class="track-info">
+                    <span id="track-title">WAVEFORM</span>
+                    <span id="track-time">0:00 / 0:00</span>
+                </div>
+                <div id="waveform"></div>
+                <div class="controls">
+                    <button id="btn-play" class="control-btn">▶</button>
+                    <button id="btn-stop" class="control-btn">⏹</button>
+                </div>
+            </div>
+
+            <div class="controls-grid">
+                <!-- Processor Controls -->
+                <div class="panel processor-panel">
+                    <h3>🎚 AUDIO PROCESSOR</h3>
+                    
+                    <div class="slider-group">
+                        <label>Speed (Tempo) <span id="speed-val">1.00x</span></label>
+                        <input type="range" id="speed-slider" min="0.5" max="2.0" step="0.05" value="1.0">
+                    </div>
+
+                    <div class="slider-group">
+                        <label>Pitch (Semitones) <span id="pitch-val">0 st</span></label>
+                        <input type="range" id="pitch-slider" min="-12" max="12" step="1" value="0">
+                    </div>
+
+                    <div class="bypass-toggle">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="bypass-check">
+                            <span class="checkmark"></span>
+                            ⚡ AUTO BYPASS (Anti-Copyright)
+                        </label>
+                    </div>
+
+                    <!-- Bypass Level -->
+                    <div id="bypass-options" class="hidden" style="margin-bottom: 20px;">
+                        <label style="font-size: 0.8rem; margin-bottom: 5px; display: block;">Bypass Intensity:</label>
+                        <select id="bypass-level" style="width: 100%; background: #000; color: #fff; padding: 8px; border: 1px solid #333; border-radius: 4px;">
+                            <option value="light">Light (Speed 1.05x, Pitch +0.5st)</option>
+                            <option value="medium" selected>Medium (Speed 1.1x, Pitch +1st, EQ)</option>
+                            <option value="heavy">Heavy (Aggressive - Speed 1.15x, Echo, EQ)</option>
+                        </select>
+                    </div>
+
+                    <button id="btn-process" class="btn-action">APPLY & PROCESS</button>
+                </div>
+
+                <!-- Presets -->
+                <div class="panel presets-panel">
+                    <h3>🎯 PRESETS</h3>
+                    <div class="preset-grid">
+                        <button class="preset-btn" onclick="applyPreset('nightcore')">Nightcore<br><span>1.25x / +3st</span></button>
+                        <button class="preset-btn" onclick="applyPreset('slowed')">Slowed<br><span>0.8x / -2st</span></button>
+                        <button class="preset-btn" onclick="applyPreset('chipmunk')">Chipmunk<br><span>1.0x / +7st</span></button>
+                        <button class="preset-btn" onclick="applyPreset('deep')">Deep<br><span>1.0x / -5st</span></button>
+                        <button class="preset-btn" onclick="applyPreset('reset')">Reset<br><span>1.0x / 0st</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export & Roblox Upload -->
+            <div class="panel export-panel">
+                <h3>💾 EXPORT & ROBLOX</h3>
+                
+                <div class="export-actions" style="margin-bottom: 20px;">
+                    <div class="format-badge">OGG (Roblox Native)</div>
+                    <a id="download-link" href="#" class="btn-download disabled" download>
+                        EXPORT CURRENT → OGG
+                    </a>
+                </div>
+
+                <div class="roblox-upload-section" style="border-top: 1px solid #2a2a30; padding-top: 20px;">
+                    <h4 style="margin: 0 0 10px 0; color: #ccc;">🚀 AUTO UPLOAD TO ROBLOX</h4>
+                    <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
+                        Requires API Key from <a href="https://create.roblox.com/dashboard/credentials" target="_blank" style="color: var(--accent-cyan);">Roblox Dashboard</a>
+                    </p>
+                    
+                    <div class="input-group">
+                        <input type="password" id="roblox-api-key" placeholder="Paste Roblox API Key Here" class="input-field">
+                    </div>
+                    <div class="input-group">
+                        <label style="font-size: 0.8rem; margin-bottom: 5px; display: block;">Upload Target:</label>
+                        <select id="upload-type" style="width: 100%; background: #000; color: #fff; padding: 8px; border: 1px solid #333; border-radius: 4px; margin-bottom: 10px;">
+                            <option value="user">👤 User (My Inventory)</option>
+                            <option value="group">👥 Group (Group Inventory)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" id="user-id-group">
+                        <input type="text" id="roblox-user-id" placeholder="Your Roblox User ID" class="input-field">
+                    </div>
+                    
+                    <div class="input-group hidden" id="group-id-group">
+                        <input type="text" id="roblox-group-id" placeholder="Target Group ID" class="input-field" style="border-color: #bd00ff;">
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <input type="text" id="asset-name" placeholder="Asset Name" class="input-field">
+                        <input type="text" id="asset-desc" placeholder="Description (Optional)" class="input-field">
+                    </div>
+
+                    <button id="btn-upload-roblox" class="btn-roblox disabled">
+                        ☁️ UPLOAD TO ROBLOX
+                    </button>
+
+                    <div id="upload-status" class="status-box hidden">
+                        <div class="status-indicator"></div>
+                        <span id="status-text">Ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
